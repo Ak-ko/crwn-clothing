@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, signInWithRedirect, signInWithPopup, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, signInWithRedirect, signInWithPopup, createUserWithEmailAndPassword,signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
 
 import{
 getFirestore,
@@ -32,6 +32,7 @@ export const signInWithGoogleRedirect = () => signInWithRedirect(auth, googlePro
 
 export const db = getFirestore();
 
+// adding to db
 export const createUserDocumentFromAuth = async (userAuth, additionalFields = {}) => {
     if(!userAuth) return;
     const userDocRef = doc(db, 'users', userAuth.uid);
@@ -53,10 +54,35 @@ export const createUserDocumentFromAuth = async (userAuth, additionalFields = {}
             console.log('there is an error.', error.message);
        }
     }
+
     return userDocRef;
 };
 
+export const SigningInWithEmailAndPassword = async (userAuth,email,password) => {
+    if(!userAuth) return;
+    const userDocRef = doc(db, 'users', userAuth.uid);
+
+    const userSnapShot = await getDoc(userDocRef);
+
+    if(userSnapShot.exists()){
+        console.log(email + " : " + password);
+    }
+    else{
+        alert('There is no user signed in yet.');
+    }
+}
+
+// just creating a user and return a userCredential
 export const createAuthUserWithEmailAndPassword = async(email, password) => {
     if(!email || !password) return;
     return await createUserWithEmailAndPassword(auth, email, password);
 }
+
+export const signInAuthUserWithEmailAndPassword = async(email, password) => {
+    if(!email || !password) return;
+    return await signInWithEmailAndPassword(auth, email, password);
+}
+
+export const signOutUser = async () => await signOut(auth);
+
+export const onAuthStateChangedListener = (callback) => onAuthStateChanged(auth, callback, errorCallback, completeCallback);
