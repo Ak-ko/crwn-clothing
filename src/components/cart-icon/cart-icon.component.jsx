@@ -5,12 +5,12 @@ import { useContext } from 'react';
 
 
 const CartIcon = () => {
-    const {isDropdownOpen, setDropdownOpen } = useContext(CartContext);
+    const {isDropdownOpen, setDropdownOpen, cartCount } = useContext(CartContext);
     const toggleIsDropdownOpen = () => setDropdownOpen(!isDropdownOpen); 
     return(
         <div className='cart-icon-container' onClick={toggleIsDropdownOpen}>
             <ShoppingIcon className='shopping-icon'/>
-            <span className='item-count'>0</span>
+            <span className='item-count'>{cartCount}</span>
         </div>
     )
 }
